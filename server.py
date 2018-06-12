@@ -2,13 +2,10 @@ from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from sqlalchemy import create_engine, MetaData, Table
 from json import dumps
-from datetime import datetime
+from datetime import datetime, date
 import logging
-from datetime import date
 import string
-
-#Create a engine for connecting to SQLite3.
-e = create_engine('sqlite:///salaries.db', echo=True)
+import juiceProcess
 
 app = Flask(__name__)
 api = Api(app)
@@ -18,30 +15,16 @@ class Health(Resource):
         return {'health': 'ok'}, 200
 
 class JuiceInfoList(Resource):
-    #def get(self, department_name):
     def get(self):
-        conn = e.connect()
-        query = conn.execute("select * from juice")
-        #Query the result and get cursor.Dumping that data to a JSON is looked by extension
-        result = {'data': [dict(zip(tuple (query.keys()) ,i)) for i in query.cursor]}
-        return result
-        conn.close()
-
+        return juiceProcess.getJuices()
         
 class JuiceInfo(Resource):
-    #def get(self, department_name):
     def get(self,juice_id):
-        conn = e.connect()
-        query = conn.execute("select * from juice where id ="+juice_id)
-        #Query the result and get cursor.Dumping that data to a JSON is looked by extension
-        result = {'data': [dict(zip(tuple (query.keys()) ,i)) for i in query.cursor]}
-        return result
-        conn.close()
+        return juiceProcess.getJuice(juice_id)
 
 class JuiceAdd(Resource):
     def post(self):
-        #Get all params
-        
+        #Get all params 
         parser = reqparse.RequestParser()
         
         parser.add_argument('id', type=int, help='Numeric values only')
@@ -59,22 +42,7 @@ class JuiceAdd(Resource):
         nic_valueArg = args['nic_value']
         date_steepedArg = args['date_steeped']
         
-        #Lets format dates so sql3 accepts it :
-        datetime_fabricatedArg = datetime.strptime(date_fabricatedArg, '%Y-%m-%d %H:%M:%S')
-        datetime_steepedArg    = datetime.strptime(date_steepedArg,    '%Y-%m-%d %H:%M:%S')
-        
-        conn = e.connect()
-        
-        # Create MetaData instance
-        metadata = MetaData(e, reflect=True)
-        # Get Table
-        juicesTable = metadata.tables['juice']
-        
-        ins = juicesTable.insert().values(id=idArg,date_fabricated=datetime_fabricatedArg,desc=descArg,quantity=quantityArg,nic_value=nic_valueArg,date_steeped=datetime_steepedArg)
-                
-        result = conn.execute(ins)
-        
-        print(result)
+        juiceProcess.juiceAdd(idArg,date_fabricatedArg,descArg,quantityArg,nic_valueArg,date_steepedArg)
         
         return 201
         
