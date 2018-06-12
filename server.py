@@ -75,8 +75,6 @@ class JuiceAdd(Resource):
         result = conn.execute(ins)
         
         print(result)
-        #query = conn.execute("INSERT INTO juice (id,date_fabricated,desc,quantity,nic_value,date_steeped) VALUES(:id,:date_fabricated,:desc,:quantity,:nic_value,:date_steeped)",
-        #{'id':idArg,'date_fabricated':date_fabricatedArg,'desc':descArg,'quantity':quantityArg,'nic_valueArg':nic_valueArg,'date_steepedArg':date_steepedArg})
         
         return 201
         
