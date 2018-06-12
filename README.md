@@ -13,7 +13,7 @@ Once you clone the project
 
 * Execute it with `python ./server.py`
 
-**And its done !
+**And its done !**
 
 ## How to use it ? 
 
@@ -33,4 +33,5 @@ So far, you can :
 
 * Post (add) a new juice !
 
- ⋅⋅⋅`curl http://localhost:5002/juice/add/--TODO`
+ ⋅⋅⋅`curl http://localhost:5002/juice/add -d "id=3&date_fabricated=2018-06-11 10:21:00&desc='Did it with curl !'&quantity=30&nic_value=3&date_steeped=2018-06-11 10:21:00" -X POST -v
+`
