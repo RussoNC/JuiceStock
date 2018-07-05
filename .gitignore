@@ -1,1 +1,5 @@
 .settings
+.project
+.pydevproject
+venv
+env
